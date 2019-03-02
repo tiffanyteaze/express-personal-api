@@ -37,6 +37,21 @@ app.get('/', function homepage(req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
+app.get("/api/profile", (req, res) => {
+  res.json({
+    name: "Tiffany Teaze",
+    githubUsername: "tiffanyteaze",
+    githubProfileImage: "https://avatars1.githubusercontent.com/u/46355886?s=460&v=4",
+    personalSiteLink: "tiffanyteaze.com",
+    currentCity: "San Francisco, CA", 
+    pets: [{
+      name: "Bean",
+      type: "Dog",
+      breed: "Lhasapoo"
+    }]
+  });
+});
+
 
 /*
  * JSON API Endpoints
@@ -53,8 +68,12 @@ app.get('/api', (req, res) => {
     baseUrl: "http://YOUR-APP-NAME.herokuapp.com", // CHANGE ME
     endpoints: [
       {method: "GET", path: "/api", description: "Describes all available endpoints"},
-      {method: "GET", path: "/api/profile", description: "Data about me"}, // CHANGE ME
-      {method: "POST", path: "/api/campsites", description: "E.g. Create a new campsite"} // CHANGE ME
+      {method: "GET", path: "/api/profile", description: "Describes all available endpoints"},
+      {method: "GET", path: "/api/games", description: "View a list of games played"},
+      {method: "GET", path: "/api/games/:id", description: "View one game's information"},
+      {method: "POST", path: "/api/games", description: "Createa  new game"},
+      {method: "PUT", path: "/api/games/:id", description: "Edit a game's information"},
+      {method: "DELETE", path: "/api/games/:id", description: "Edit a game's information"}
     ]
   })
 });
