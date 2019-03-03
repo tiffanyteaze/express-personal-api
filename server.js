@@ -19,7 +19,7 @@ app.use(function(req, res, next) {
  * DATABASE *
  ************/
 
-// const db = require('./models');
+const db = require('./models');
 
 /**********
  * ROUTES *
@@ -50,6 +50,55 @@ app.get("/api/profile", (req, res) => {
       breed: "Lhasapoo"
     }]
   });
+});
+
+app.get("/api/games", (req, res) => {
+  db.Game.find(function(err, games) {
+    if (err) {
+      console.log("index error: " + err);
+      res.sendStatus(500);
+    }
+    res.json(games);
+  })
+})
+
+//find one game
+app.get("/api/games/:id", (req, res) => {
+  db.Game.findOne({_id: req.params.id }, (err, game) => {
+    res.json(game);
+  });
+})
+
+// create new game
+app.post('/api/games', (req, res) => {
+  // create new game with form data (`req.body`)
+  console.log('games create', req.body);
+  var newGame = req.body;
+  db.Game.create(newGame, (err, newGame) => {
+    if (err) console.log("Game was not created.");
+    res.json(newGame);
+  })
+
+});
+
+// edit game
+app.put('/api/games/:id', (req, res) => {
+  let gameId = req.params.id;
+  console.log(gameId);
+  db.Game.findOneAndUpdate({ _id: gameId }, req.body, (err, updatedGame) => {
+      if (err) return console.log(err);
+      console.log(updatedGame);
+      res.json(updatedGame);
+  });
+});
+
+// Delete a specific game
+app.delete('/api/games/:id', (req, res) => {
+  let gameId = req.params.id;
+  db.Game.findOneAndDelete({_id: gameId}, (err, foundGame) => {
+    // if (err) console.log(err);
+    res.json(foundGame);
+  })
 });
 
 
