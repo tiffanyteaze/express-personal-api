@@ -16,12 +16,26 @@ $(document).ready(function(){
     //HTML to append when new game is added
     function getGameHtml(game) {
         return `<p>
-            ${game.title}, ${game.avatar}
+            <b class="game-title">${game.title}</b>, ${game.avatar}
+            <span class="edit-input" style="display: none">
+                <input type="text" value="${game.title}" />
+                <button
+                    class="editSubmitBtn"
+                    data-id="${game._id}">
+                    Save
+                </button>
+            </span>
             <button 
                 type="delete" 
                 class="deleteBtn"
                 data-id=${game._id}>
                 Delete
+            </button>
+            <button 
+                type="button"
+                class="editBtn"
+                data-id=${game._id}>
+                Edit
             </button>
          </p>`;
     }
@@ -93,9 +107,41 @@ $(document).ready(function(){
     $gameList.on('click', '.deleteBtn', function() {
         $.ajax({
             method: 'DELETE',
-            url: 'api/games/'+$(this).attr('data-id'),
+            url: '/api/games/'+$(this).attr('data-id'),
             success: deleteGameSuccess,
             error: deleteGameError
+        })
+    })
+
+    $gameList.on('click', '.editBtn', function() {
+        $(this).parent().find(".edit-input").show();
+    })
+
+    //changes HTML inside title with new title
+    // function editGameSuccess(game) {
+    //     $(this).parent().parent().find(".game-title").html(game.title);
+    // }
+
+    function editGameError() {
+        console.log("There was an error with editing a game.")
+    }
+
+    //event listener for edit game button
+    $gameList.on('click', '.editSubmitBtn', function() {
+        $(this).parent().hide();
+        let newTitle = $(this).parent().find("input").val();
+        let dataId = `${ $(this).attr('data-id') }`;
+        console.log(dataId);
+        console.log(newTitle);
+        $.ajax({
+            method: "PUT",
+            url: `/api/games/${ $(this).attr('data-id') }`,
+            data: { title: newTitle },
+            success: (game) => {
+                console.log("Your success function ran.");
+                $(this).parent().parent().find(".game-title").html(game.title);
+            },
+            error: editGameError
         })
     })
 
