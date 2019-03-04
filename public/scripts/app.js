@@ -131,14 +131,11 @@ $(document).ready(function(){
         $(this).parent().hide();
         let newTitle = $(this).parent().find("input").val();
         let dataId = `${ $(this).attr('data-id') }`;
-        console.log(dataId);
-        console.log(newTitle);
         $.ajax({
             method: "PUT",
             url: `/api/games/${ $(this).attr('data-id') }`,
             data: { title: newTitle },
             success: (game) => {
-                console.log("Your success function ran.");
                 $(this).parent().parent().find(".game-title").html(game.title);
             },
             error: editGameError
